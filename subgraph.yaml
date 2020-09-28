@@ -8,8 +8,7 @@ dataSources:
     name: Factory
     network: xdai
     source:
-      # TODO(onbjerg): Get correct address
-      address: '0x2E645469f354BB4F5c8a05B3b30A929361cf77eC'
+      address: '0x076b64f9F966e3bBD0FCdC79D490Ab71cF961bb0'
       abi: Factory
     mapping:
       kind: ethereum/events
