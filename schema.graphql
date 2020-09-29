@@ -31,4 +31,9 @@ type Pool @entity {
 
   # Pair
   pair: Pair!
+
+  # Pool information
+  rewardToken: Token!
+  rewards: BigDecimal!
+  staked: BigDecimal!
 }

@@ -1,59 +1,25 @@
 import {
-  BigInt,
-  Address
+  BigDecimal
 } from '@graphprotocol/graph-ts'
 import {
   CreateUnipoolWithProxyCall,
   CreateUnipoolCall
 } from '../generated/Factory/Factory'
 import {
-  ERC20
-} from '../generated/Factory/ERC20'
+  Pool as PoolContract
+} from '../generated/Factory/Pool'
 import {
-  Pair as PairContract
-} from '../generated/Factory/Pair'
+  Pool as PoolDataSource
+} from '../generated/templates'
 import {
-  UnipoolFactory,
-  Token,
-  Pair,
   Pool
 } from '../generated/schema'
-
-export function loadOrCreateFactory(address: Address): UnipoolFactory {
-  let factory = UnipoolFactory.load(address.toHex())
-  if (factory === null) {
-    factory = new UnipoolFactory(address.toHex())
-    factory.poolCount = 0
-    factory.save()
-  }
-  return factory as UnipoolFactory
-}
-
-export function loadOrCreateToken(address: Address): Token {
-  let token = Token.load(address.toHex())
-  if (token === null) {
-    let tokenContract = ERC20.bind(address)
-
-    token = new Token(address.toHex())
-    token.symbol = tokenContract.symbol()
-    token.name = tokenContract.name()
-    token.decimals = BigInt.fromI32(tokenContract.decimals())
-    token.save()
-  }
-  return token as Token
-}
-
-export function loadOrCreatePair(address: Address): Pair {
-  let pair = Pair.load(address.toHex())
-  if (pair === null) {
-    let pairContract = PairContract.bind(address)
-    pair = new Pair(address.toHex())
-    pair.token0 = loadOrCreateToken(pairContract.token0()).id
-    pair.token1 = loadOrCreateToken(pairContract.token1()).id
-    pair.save()
-  }
-  return pair as Pair
-}
+import {
+  ZERO_BD,
+  loadOrCreateFactory,
+  loadOrCreateToken,
+  loadOrCreatePair
+} from './helpers'
 
 export function handleNewPool(call: CreateUnipoolCall): void {
   // TODO(onbjerg): Also persist balance proxies
@@ -64,9 +30,16 @@ export function handleNewPool(call: CreateUnipoolCall): void {
   // Load pair data
   let pair = loadOrCreatePair(call.inputs._uniswapTokenExchange)
 
+  // Set up pool data source
+  PoolDataSource.create(call.outputs.value0)
+
   // Create pool
+  let poolContract = PoolContract.bind(call.outputs.value0)
   let pool = new Pool(call.outputs.value0.toHex())
   pool.pair = pair.id
+  pool.rewardToken = loadOrCreateToken(poolContract.tradedToken()).id
+  pool.rewards = ZERO_BD
+  pool.staked = ZERO_BD
 
   factory.save()
   pair.save()
@@ -82,9 +55,16 @@ export function handleNewPoolWithProxy(call: CreateUnipoolWithProxyCall): void {
   // Load pair data
   let pair = loadOrCreatePair(call.inputs._uniswapTokenExchange)
 
+  // Set up pool data source
+  PoolDataSource.create(call.outputs.value0)
+
   // Create pool
+  let poolContract = PoolContract.bind(call.outputs.value0)
   let pool = new Pool(call.outputs.value0.toHex())
   pool.pair = pair.id
+  pool.rewardToken = loadOrCreateToken(poolContract.tradedToken()).id
+  pool.rewards = ZERO_BD
+  pool.staked = ZERO_BD
 
   factory.save()
   pair.save()
