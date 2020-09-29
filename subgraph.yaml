@@ -8,14 +8,18 @@ dataSources:
     name: Factory
     network: xdai
     source:
-      address: '0x076b64f9F966e3bBD0FCdC79D490Ab71cF961bb0'
+      address: '0xe29dcd715d11455194d7d74c622f3c42c8a37040'
       abi: Factory
+      startBlock: 12055150
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
+        - UnipoolFactory
         - Pool
+        - Pair
+        - Token
       abis:
         - name: Factory
           file: ./abis/UnipoolFactory.json
@@ -28,6 +32,8 @@ dataSources:
       callHandlers:
         - function: createUnipool(address)
           handler: handleNewPool
+        - function: createUnipoolWithProxy(address)
+          handler: handleNewPoolWithProxy
       file: ./src/factory.ts
 templates:
   - kind: ethereum/contract
@@ -41,8 +47,7 @@ templates:
       language: wasm/assemblyscript
       file: ./src/pool.ts
       entities:
-        - Pair
-        - Token
+        - Pool
       abis:
         - name: Pool
           file: ./abis/Unipool.json

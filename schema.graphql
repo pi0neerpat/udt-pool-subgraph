@@ -14,7 +14,6 @@ type Token @entity {
   symbol: String!
   name: String!
   decimals: BigInt!
-  totalSupply: BigInt!
 }
 
 type Pair @entity {
@@ -24,9 +23,6 @@ type Pair @entity {
   # Mirrored from the smart contract
   token0: Token!
   token1: Token!
-  reserve0: BigDecimal!
-  reserve1: BigDecimal!
-  totalSupply: BigDecimal!
 }
 
 type Pool @entity {
@@ -35,4 +31,9 @@ type Pool @entity {
 
   # Pair
   pair: Pair!
+
+  # Pool information
+  rewardToken: Token!
+  rewards: BigDecimal!
+  staked: BigDecimal!
 }
