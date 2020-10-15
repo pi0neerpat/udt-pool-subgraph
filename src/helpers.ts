@@ -1,7 +1,8 @@
 import {
   BigInt,
   BigDecimal,
-  Address
+  Address,
+  log
 } from '@graphprotocol/graph-ts'
 import {
   ERC20
@@ -58,8 +59,18 @@ export function loadOrCreatePair(address: Address): Pair {
   if (pair === null) {
     let pairContract = PairContract.bind(address)
     pair = new Pair(address.toHex())
-    pair.token0 = loadOrCreateToken(pairContract.token0()).id
-    pair.token1 = loadOrCreateToken(pairContract.token1()).id
+    let token0 = pairContract.try_token0()
+    if (token0.reverted) {
+      log.info('Could not get token0 address from pair', [])
+      return null
+    }
+    let token1 = pairContract.try_token0()
+    if (token1.reverted) {
+      log.info('Could not get token0 address from pair', [])
+      return null
+    }
+    pair.token0 = loadOrCreateToken(token0.value).id
+    pair.token1 = loadOrCreateToken(token1.value).id
     pair.save()
   }
   return pair as Pair

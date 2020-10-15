@@ -1,5 +1,6 @@
 import {
-  BigDecimal
+  BigDecimal,
+  log
 } from '@graphprotocol/graph-ts'
 import {
   CreateUnipoolWithProxyCall,
@@ -25,10 +26,18 @@ export function handleNewPool(call: CreateUnipoolCall): void {
   // TODO(onbjerg): Also persist balance proxies
   // Update factory stats
   let factory = loadOrCreateFactory(call.to)
+  if (factory === null) {
+    log.info('Could not load factory', [])
+    return
+  }
   factory.poolCount = factory.poolCount + 1
 
   // Load pair data
   let pair = loadOrCreatePair(call.inputs._uniswapTokenExchange)
+  if (pair === null) {
+    log.info('Could not load pair', [])
+    return
+  }
 
   // Set up pool data source
   PoolDataSource.create(call.outputs.value0)
@@ -37,7 +46,11 @@ export function handleNewPool(call: CreateUnipoolCall): void {
   let poolContract = PoolContract.bind(call.outputs.value0)
   let pool = new Pool(call.outputs.value0.toHex())
   pool.pair = pair.id
-  pool.rewardToken = loadOrCreateToken(poolContract.tradedToken()).id
+  let tradedToken = loadOrCreateToken(poolContract.tradedToken())
+  if (tradedToken === null) {
+    return
+  }
+  pool.rewardToken = tradedToken.id
   pool.rewards = ZERO_BD
   pool.staked = ZERO_BD
 
@@ -50,10 +63,18 @@ export function handleNewPoolWithProxy(call: CreateUnipoolWithProxyCall): void {
   // TODO(onbjerg): Also persist balance proxies
   // Update factory stats
   let factory = loadOrCreateFactory(call.to)
+  if (factory === null) {
+    log.info('Could not load factory', [])
+    return
+  }
   factory.poolCount = factory.poolCount + 1
 
   // Load pair data
   let pair = loadOrCreatePair(call.inputs._uniswapTokenExchange)
+  if (pair === null) {
+    log.info('Could not load pair', [])
+    return
+  }
 
   // Set up pool data source
   PoolDataSource.create(call.outputs.value0)
@@ -62,7 +83,11 @@ export function handleNewPoolWithProxy(call: CreateUnipoolWithProxyCall): void {
   let poolContract = PoolContract.bind(call.outputs.value0)
   let pool = new Pool(call.outputs.value0.toHex())
   pool.pair = pair.id
-  pool.rewardToken = loadOrCreateToken(poolContract.tradedToken()).id
+  let tradedToken = loadOrCreateToken(poolContract.tradedToken())
+  if (tradedToken === null) {
+    return
+  }
+  pool.rewardToken = tradedToken.id
   pool.rewards = ZERO_BD
   pool.staked = ZERO_BD
 
