@@ -1,5 +1,5 @@
 specVersion: 0.0.2
-description: UDT-ETH Uniswap Pool
+description: UDT-ETH Pool on Uniswap
 repository: https://github.com/pi0neerpat/udt-pool-subgraph
 schema:
   file: ./schema.graphql
@@ -17,9 +17,12 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Pool
+        - Token
       abis:
         - name: Pool
           file: ./abis/Unipool.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: Staked(indexed address,uint256)
           handler: handleStake
