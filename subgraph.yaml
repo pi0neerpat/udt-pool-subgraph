@@ -1,51 +1,20 @@
 specVersion: 0.0.2
-description: Honeycomb pool data
-repository: https://github.com/1hive/honeycomb-subgraph
+description: UDT-ETH Uniswap Pool
+repository: https://github.com/pi0neerpat/udt-pool-subgraph
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: Factory
-    network: xdai
-    source:
-      address: '0xe29dcd715d11455194d7d74c622f3c42c8a37040'
-      abi: Factory
-      startBlock: 12055150
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      entities:
-        - UnipoolFactory
-        - Pool
-        - Pair
-        - Token
-      abis:
-        - name: Factory
-          file: ./abis/UnipoolFactory.json
-        - name: Pool
-          file: ./abis/Unipool.json
-        - name: Pair
-          file: ./abis/HoneyswapPair.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-      callHandlers:
-        - function: createUnipool(address)
-          handler: handleNewPool
-        - function: createUnipoolWithProxy(address)
-          handler: handleNewPoolWithProxy
-      file: ./src/factory.ts
-templates:
-  - kind: ethereum/contract
     name: Pool
-    network: xdai
+    network: mainnet
     source:
+      address: "0x9ca8aef2372c705d6848fdda3c1267a7f51267c1"
       abi: Pool
+      startBlock: 11328198
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
-      file: ./src/pool.ts
       entities:
         - Pool
       abis:
@@ -60,3 +29,4 @@ templates:
           handler: handleRewardAdded
         - event: RewardPaid(indexed address,uint256)
           handler: handleHarvest
+      file: ./src/pool.ts
