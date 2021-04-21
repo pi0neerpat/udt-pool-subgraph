@@ -1,12 +1,12 @@
 {
-  "name": "udt-eth-pool",
+  "name": "udt-pool-subgraph",
   "version": "0.1.0",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "create-local": "graph create pi0neerpat/udt-eth-pool --node http://127.0.0.1:8020",
-    "deploy-local": "graph deploy pi0neerpat/udt-eth-pool --ipfs http://localhost:5001 --node http://127.0.0.1:8020",
-    "deploy": "graph deploy pi0neerpat/udt-eth-pool --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/"
+    "create-local": "graph create pi0neerpat/unlock-protocol-farm --node http://127.0.0.1:8020",
+    "deploy-local": "graph deploy pi0neerpat/unlock-protocol-farm --ipfs http://localhost:5001 --node http://127.0.0.1:8020",
+    "deploy": "graph deploy pi0neerpat/unlock-protocol-farm --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/"
   },
   "devDependencies": {
     "@graphprotocol/graph-cli": "^0.18.0",
