@@ -8,9 +8,9 @@ dataSources:
     name: Pool
     network: mainnet
     source:
-      address: "0x9ca8aef2372c705d6848fdda3c1267a7f51267c1"
+      address: "0xA4fA570Ea189F2FA5024c0d9BB49E0509440c1B9"
       abi: Pool
-      startBlock: 11328198
+      startBlock: 12287756
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
