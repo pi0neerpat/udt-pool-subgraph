@@ -1,3 +1,3 @@
-# Honeycomb Subgraph
+# Unlock Protocol Farm Subgraph
 
-A subgraph for pool data on Honeycomb.
+https://thegraph.com/explorer/subgraph/pi0neerpat/unlock-protocol-farm
