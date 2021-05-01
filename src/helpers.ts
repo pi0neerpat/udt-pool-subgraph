@@ -1,6 +1,6 @@
 import { BigInt, BigDecimal, Address, log } from "@graphprotocol/graph-ts";
 import { ERC20 } from "../generated/Pool/ERC20";
-import { UnipoolFactory, Token, Pair } from "../generated/schema";
+import { Token } from "../generated/schema";
 
 export let ZERO_BI = BigInt.fromI32(0);
 export let ONE_BI = BigInt.fromI32(1);
